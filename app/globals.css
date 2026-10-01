@@ -1,0 +1,12 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "../vendor/shadcn-tailwind-4.13.0.css";
+
+:root { --background:#07090b; --foreground:#f6f6f6; --card:#101317; --card-foreground:#f6f6f6; --popover:#101317; --popover-foreground:#f6f6f6; --primary:#d4a94f; --primary-foreground:#07090b; --secondary:#1a1e23; --secondary-foreground:#f6f6f6; --muted:#1a1e23; --muted-foreground:#a1a1aa; --accent:#242a31; --accent-foreground:#f6f6f6; --destructive:#ef4444; --border:#ffffff1a; --input:#ffffff1f; --ring:#d4a94f; --radius:.75rem; }
+@theme inline { --color-background:var(--background); --color-foreground:var(--foreground); --color-card:var(--card); --color-card-foreground:var(--card-foreground); --color-popover:var(--popover); --color-popover-foreground:var(--popover-foreground); --color-primary:var(--primary); --color-primary-foreground:var(--primary-foreground); --color-secondary:var(--secondary); --color-secondary-foreground:var(--secondary-foreground); --color-muted:var(--muted); --color-muted-foreground:var(--muted-foreground); --color-accent:var(--accent); --color-accent-foreground:var(--accent-foreground); --color-destructive:var(--destructive); --color-border:var(--border); --color-input:var(--input); --color-ring:var(--ring); --radius-sm:calc(var(--radius) - 4px); --radius-md:calc(var(--radius) - 2px); --radius-lg:var(--radius); --radius-xl:calc(var(--radius) + 4px); --font-sans:Arial,Helvetica,sans-serif; }
+*{box-sizing:border-box} html{scroll-behavior:smooth} body{margin:0;background:var(--background);color:var(--foreground);font-family:Arial,Helvetica,sans-serif} button,a,input{-webkit-tap-highlight-color:transparent}
+.hero-grid{display:grid;min-height:570px;background:radial-gradient(circle at 30% 20%,rgb(212 169 79 / 13%),transparent 30%),linear-gradient(135deg,#0f1317 0%,#07090b 70%)}
+.hero-warriors{background:#0a0b0d}.hero-warriors img{filter:saturate(.9) contrast(1.06)}
+.brand-manifesto{background:radial-gradient(circle at 80% 20%,rgb(212 169 79 / 16%),transparent 28%),linear-gradient(135deg,#15191d,#080a0c)}
+.product-visual{background:radial-gradient(circle at 82% 20%,rgb(212 169 79 / 18%),transparent 26%),repeating-linear-gradient(125deg,transparent 0 22px,rgb(255 255 255 / 2%) 22px 23px),linear-gradient(145deg,#181d22,#0b0e11)}
+@media(min-width:1024px){.hero-grid{grid-template-columns:1.08fr .92fr}} @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition-duration:.01ms!important;animation-duration:.01ms!important}}
