@@ -27,8 +27,8 @@ jobs:
     - name: Install dependencies
       run: pnpm install --frozen-lockfile
 
-    - name: Build
-      run: pnpm run build
+    - name: Build static site
+      run: pnpm run build:static
 
     - name: Deploy to cPanel via FTP
       if: github.ref == 'refs/heads/main' && github.event_name == 'push'
@@ -37,6 +37,6 @@ jobs:
         server: ${{ secrets.FTP_HOST }}
         username: ${{ secrets.FTP_USERNAME }}
         password: ${{ secrets.FTP_PASSWORD }}
-        local-dir: ./dist/
-        server-dir: /public_html/
+        local-dir: ./out/
+        server-dir: /
         dangerous-clean-slate: false

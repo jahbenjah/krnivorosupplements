@@ -1,0 +1,95 @@
+# KRNIVORO Supplements — Apache / cPanel
+# `pnpm build:static` copia este archivo de public/ a out/ en cada build.
+
+Options -Indexes
+DirectoryIndex index.html
+ErrorDocument 404 /404.html
+AddDefaultCharset UTF-8
+
+# ---------------------------------------------------------------
+# HTTPS y dominio sin www
+# ---------------------------------------------------------------
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Permitir la validación SSL automática de cPanel (AutoSSL / Let's Encrypt)
+  RewriteRule ^\.well-known/ - [L]
+
+  # Forzar HTTPS
+  RewriteCond %{HTTPS} off
+  RewriteCond %{HTTP:X-Forwarded-Proto} !https
+  RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+  # Quitar www (www.dominio.com -> dominio.com)
+  RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+  RewriteRule ^ https://%1%{REQUEST_URI} [L,R=301]
+
+  # Bloquear archivos ocultos (.env, .git, etc.)
+  RewriteRule (^|/)\.(?!well-known/) - [F]
+</IfModule>
+
+# ---------------------------------------------------------------
+# Tipos MIME
+# ---------------------------------------------------------------
+<IfModule mod_mime.c>
+  AddType application/javascript .js .mjs
+  AddType application/json .json
+  AddType image/svg+xml .svg
+  AddType image/webp .webp
+  AddType image/avif .avif
+  AddType font/woff2 .woff2
+  AddType application/manifest+json .webmanifest
+</IfModule>
+
+# ---------------------------------------------------------------
+# Compresión
+# ---------------------------------------------------------------
+<IfModule mod_deflate.c>
+  AddOutputFilterByType DEFLATE text/html text/plain text/css text/xml
+  AddOutputFilterByType DEFLATE application/javascript application/json application/xml
+  AddOutputFilterByType DEFLATE image/svg+xml application/manifest+json
+</IfModule>
+
+# ---------------------------------------------------------------
+# Caché
+# ---------------------------------------------------------------
+<IfModule mod_expires.c>
+  ExpiresActive On
+  ExpiresDefault "access plus 1 hour"
+  ExpiresByType text/html "access plus 0 seconds"
+  ExpiresByType application/json "access plus 0 seconds"
+  ExpiresByType text/css "access plus 1 year"
+  ExpiresByType application/javascript "access plus 1 year"
+  ExpiresByType image/png "access plus 1 month"
+  ExpiresByType image/jpeg "access plus 1 month"
+  ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/avif "access plus 1 month"
+  ExpiresByType image/svg+xml "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
+  ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+  # HTML siempre fresco para que cada deploy se vea de inmediato
+  <FilesMatch "\.(html?|json|txt)$">
+    Header set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+
+  # Archivos de Next.js con hash en el nombre (cambian en cada versión)
+  <If "%{REQUEST_URI} =~ m#^/_next/static/#">
+    Header set Cache-Control "public, max-age=31536000, immutable"
+  </If>
+
+  # ---------------------------------------------------------------
+  # Cabeceras de seguridad
+  # ---------------------------------------------------------------
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set X-Frame-Options "SAMEORIGIN"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Activar sólo cuando el SSL del dominio funcione bien (los navegadores lo recuerdan 1 año)
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+  Header unset X-Powered-By
+</IfModule>
+
+ServerSignature Off
